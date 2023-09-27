@@ -40,6 +40,40 @@ const botaoEdit = (parent) => {
     parent.appendChild(span);
 }
 
+async function ehFeriado(data) {
+  try {
+    // Faça uma solicitação GET para a API de feriados
+    const response = await fetch("https://date.nager.at/api/v3/publicholidays/2023/BR");
+    if (!response.ok) {
+      throw new Error("Erro ao buscar feriados.");
+    }
+
+    // Analise a resposta JSON
+    const feriados = await response.json();
+    data = data.replace(/\//g, '-');
+
+    // Verifique se a data está na lista de feriados
+    for (const feriado of feriados) {
+      if (feriado.date === data) {
+
+        return true; // A data é um feriado
+      }
+    }
+    
+    return false; // A data não é um feriado
+  } catch (error) {
+    return false; // Em caso de erro, tratamos como se a data não fosse um feriado
+  }
+}
+
+const botaoFeriado = (parent) => {
+  let span = document.createElement("span");
+  let txt = document.createTextNode("\u26F1");
+  span.className = "feriado";
+  span.appendChild(txt);
+  parent.appendChild(span);
+}
+
 function inverterData(data) {
     // Inverter o valor da data
     var partes = data.split('/');
@@ -179,10 +213,8 @@ const deleteItem = (item) => {
         console.error('Erro:', error);
       });
   };
-  
-  
 
-const insereNaTabela = (id, data, atividade, autor) => {
+const insereNaTabela = async (id, data, atividade, autor) => {
     var atv = [id, data, atividade, autor]
     var tab = document.getElementById('tabelaAtividades')
     var lin = tab.insertRow();
@@ -197,5 +229,8 @@ const insereNaTabela = (id, data, atividade, autor) => {
 
     botaoDelete(lin.insertCell(-1));
     removeElement();
-    // document.getElementById
+
+    if (await ehFeriado(data)===true){
+      botaoFeriado(lin.insertCell(-1));
+    }
 }
