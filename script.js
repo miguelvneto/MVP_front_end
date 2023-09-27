@@ -43,19 +43,20 @@ const botaoEdit = (parent) => {
 async function ehFeriado(data) {
   try {
     // Faça uma solicitação GET para a API de feriados
-    const response = await fetch("https://date.nager.at/api/v3/publicholidays/2023/BR");
+
+    var url = "https://date.nager.at/api/v3/publicholidays/" + data.substring(0,4) + "/BR";
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Erro ao buscar feriados.");
     }
-
+  
     // Analise a resposta JSON
     const feriados = await response.json();
     data = data.replace(/\//g, '-');
-
+    
     // Verifique se a data está na lista de feriados
     for (const feriado of feriados) {
       if (feriado.date === data) {
-
         return true; // A data é um feriado
       }
     }
