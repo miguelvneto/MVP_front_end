@@ -40,6 +40,14 @@ const botaoEdit = (parent) => {
     parent.appendChild(span);
 }
 
+const botaoDupe = (parent) => {
+  let span = document.createElement("span");
+  let txt = document.createTextNode("\uD83D\uDCC4");
+  span.className = "dupe";
+  span.appendChild(txt);
+  parent.appendChild(span);
+}
+
 async function ehFeriado(data) {
   try {
     // Faça uma solicitação GET para a API de feriados
@@ -215,6 +223,39 @@ const deleteItem = (item) => {
       });
   };
 
+const dupeElement = () => {
+  let editButtons = document.getElementsByClassName("dupe");
+  for (let i = 0; i < editButtons.length; i++) {
+    editButtons[i].onclick = function () {
+      let div = this.parentElement.parentElement;
+      const id_atividade = div.getElementsByTagName('td')[0].innerHTML;
+      if (confirm("Você tem certeza?")) {
+        duplicateItem(id_atividade); // Chama a função duplicateItem
+      alert("Atividade duplicada.")
+    }
+    };
+  }
+};
+
+const duplicateItem = (id_atividade) => {
+    let url = 'http://127.0.0.1:5000/duplicar_atividade/' + id_atividade;
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Atividade duplicada com sucesso:', data);
+        // Você pode atualizar a interface do usuário aqui, se necessário
+        listarAtividades(); // Atualiza a lista de atividades após a duplicação
+      })
+      .catch((error) => {
+        console.error('Erro:', error);
+      });
+  };
+
 const insereNaTabela = async (id, data, atividade, autor) => {
     var atv = [id, data, atividade, autor]
     var tab = document.getElementById('tabelaAtividades')
@@ -227,6 +268,9 @@ const insereNaTabela = async (id, data, atividade, autor) => {
     
     botaoEdit(lin.insertCell(-1));
     editElement();
+
+    botaoDupe(lin.insertCell(-1));
+    dupeElement();
 
     botaoDelete(lin.insertCell(-1));
     removeElement();
