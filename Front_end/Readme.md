@@ -12,6 +12,8 @@ Este é um projeto de log de manutenção  do **Sprint II** de **Engenharia de s
 
 **Exclusão de Atividades:** O usuário pode excluir uma atividade clicando no botão "Deletar" ao lado da atividade desejada. Isso solicitará uma confirmação antes de excluir a atividade. Está funcionalidade depende do utiliza o método `deletar_atividade`
 
+**Duplicar Atividades:** O usuário pode duplicar uma atividade clicando no botão "Duplicar" ao lado da atividade desejada. Está funcionalidade depende do utiliza o método `duplicar_atividade`
+
 **Verificação de Feriados:** A aplicação verifica se uma data é feriado no Brasil. Está funcionalidade utiliza uma API `pública` `externa` como método. 
 
 ***Documentação da API remota:***
